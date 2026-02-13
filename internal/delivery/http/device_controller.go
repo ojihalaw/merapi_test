@@ -22,6 +22,16 @@ func NewDeviceController(useCase *usecase.DeviceUseCase, logger *logrus.Logger) 
 	}
 }
 
+// CreateDevice godoc
+// @Summary Create Device
+// @Description Create new device
+// @Tags Devices
+// @Accept json
+// @Produce json
+// @Param request body model.CreateDeviceRequest true "Device Request"
+// @Success 200 {object} model.DeviceResponse
+// @Failure 400 {object} map[string]interface{}
+// @Router /devices [post]
 func (c *DeviceController) Create(ctx *fiber.Ctx) error {
 	request := new(model.CreateDeviceRequest)
 
@@ -53,6 +63,20 @@ func (c *DeviceController) Create(ctx *fiber.Ctx) error {
 		JSON(utils.DefaultSuccessResponse(fiber.StatusCreated, "device created successfully"))
 }
 
+// FindAll godoc
+// @Summary Get List of Devices
+// @Description Get all devices with pagination
+// @Tags Devices
+// @Accept json
+// @Produce json
+// @Param page query int false "Page number"
+// @Param limit query int false "Number of items per page"
+// @Param order_by query string false "Field to order by"
+// @Param sort_by query string false "Sort direction (asc or desc)"
+// @Param search query string false "Search term"
+// @Success 200 {object} model.DeviceResponse
+// @Failure 500 {object} map[string]interface{}
+// @Router /devices [get]
 func (c *DeviceController) FindAll(ctx *fiber.Ctx) error {
 	req := &utils.PaginationRequest{
 		Page:    ctx.QueryInt("page", 1),
@@ -72,6 +96,16 @@ func (c *DeviceController) FindAll(ctx *fiber.Ctx) error {
 		JSON(utils.SuccessResponseWithPagination(fiber.StatusOK, "get list device successfully", devices, pagination))
 }
 
+// FindByID godoc
+// @Summary Get Device by ID
+// @Description Get device details by ID
+// @Tags Devices
+// @Accept json
+// @Produce json
+// @Param id path string true "Device ID"
+// @Success 200 {object} model.DeviceResponse
+// @Failure 404 {object} map[string]interface{}
+// @Router /devices/{id} [get]
 func (c *DeviceController) FindByID(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 
@@ -90,6 +124,18 @@ func (c *DeviceController) FindByID(ctx *fiber.Ctx) error {
 		JSON(utils.SuccessResponse(fiber.StatusOK, "get detail device successfully", device))
 }
 
+// Update godoc
+// @Summary Update Device
+// @Description Update device details by ID
+// @Tags Devices
+// @Accept json
+// @Produce json
+// @Param id path string true "Device ID"
+// @Param request body model.UpdateDeviceRequest true "Update Device Request"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /devices/{id} [put]
 func (c *DeviceController) Update(ctx *fiber.Ctx) error {
 	request := new(model.UpdateDeviceRequest)
 	id := ctx.Params("id")
@@ -115,6 +161,16 @@ func (c *DeviceController) Update(ctx *fiber.Ctx) error {
 		JSON(utils.DefaultSuccessResponse(fiber.StatusOK, "update device successfully"))
 }
 
+// Delete godoc
+// @Summary Delete Device
+// @Description Delete device by ID
+// @Tags Devices
+// @Accept json
+// @Produce json
+// @Param id path string true "Device ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /devices/{id} [delete]
 func (c *DeviceController) Delete(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 

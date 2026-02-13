@@ -7,9 +7,12 @@ import (
 	"mertani_test/internal/usecase"
 	"mertani_test/internal/utils"
 
+	_ "mertani_test/docs"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+
 	"gorm.io/gorm"
 )
 
@@ -29,7 +32,7 @@ func Bootstrap(config *BootstrapConfig) {
 	sensorRepository := repository.NewSensorRepository(config.Log)
 	sensorUseCase := usecase.NewSensorUseCase(config.DB, config.Log, config.Validator, sensorRepository)
 	sensorController := http.NewSensorController(sensorUseCase, config.Log)
-
+	
 	routeConfig := route.RouteConfig{
 		App:                config.App,
 		DeviceController: deviceController,

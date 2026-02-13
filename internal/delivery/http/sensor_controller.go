@@ -22,6 +22,16 @@ func NewSensorController(useCase *usecase.SensorUseCase, logger *logrus.Logger) 
 	}
 }
 
+// CreateSensor godoc
+// @Summary Create Sensor
+// @Description Create new sensor
+// @Tags Sensors
+// @Accept json
+// @Produce json
+// @Param request body model.CreateSensorRequest true "Sensor Request"
+// @Success 200 {object} model.SensorResponse
+// @Failure 400 {object} map[string]interface{}
+// @Router /sensors [post]
 func (c *SensorController) Create(ctx *fiber.Ctx) error {
 	request := new(model.CreateSensorRequest)
 
@@ -53,6 +63,20 @@ func (c *SensorController) Create(ctx *fiber.Ctx) error {
 		JSON(utils.DefaultSuccessResponse(fiber.StatusCreated, "sensor created successfully"))
 }
 
+// FindAll godoc
+// @Summary Get Sensors List
+// @Description Get list of sensors with pagination
+// @Tags Sensors
+// @Accept json
+// @Produce json
+// @Param page query int false "Page number"
+// @Param limit query int false "Number of items per page"
+// @Param order_by query string false "Order by field"
+// @Param sort_by query string false "Sort by direction (asc/desc)"
+// @Param search query string false "Search term"
+// @Success 200 {object} model.SensorResponse
+// @Failure 500 {object} map[string]interface{}
+// @Router /sensors [get]
 func (c *SensorController) FindAll(ctx *fiber.Ctx) error {
 	req := &utils.PaginationRequest{
 		Page:    ctx.QueryInt("page", 1),
@@ -72,6 +96,16 @@ func (c *SensorController) FindAll(ctx *fiber.Ctx) error {
 		JSON(utils.SuccessResponseWithPagination(fiber.StatusOK, "get list sensor successfully", sensors, pagination))
 }
 
+// FindByID godoc
+// @Summary Get Sensor by ID
+// @Description Get sensor details by ID
+// @Tags Sensors
+// @Accept json
+// @Produce json
+// @Param id path string true "Sensor ID"
+// @Success 200 {object} model.SensorResponse
+// @Failure 404 {object} map[string]interface{}
+// @Router /sensors/{id} [get]
 func (c *SensorController) FindByID(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 
@@ -90,6 +124,18 @@ func (c *SensorController) FindByID(ctx *fiber.Ctx) error {
 		JSON(utils.SuccessResponse(fiber.StatusOK, "get detail sensor successfully", sensor))
 }
 
+// UpdateSensor godoc
+// @Summary Update Sensor
+// @Description Update sensor by ID
+// @Tags Sensors
+// @Accept json
+// @Produce json
+// @Param id path string true "Sensor ID"
+// @Param request body model.UpdateSensorRequest true "Sensor Request"
+// @Success 200 {object} map[string]interface{}
+// @Failure 400 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /sensors/{id} [put]
 func (c *SensorController) Update(ctx *fiber.Ctx) error {
 	request := new(model.UpdateSensorRequest)
 	id := ctx.Params("id")
@@ -115,6 +161,16 @@ func (c *SensorController) Update(ctx *fiber.Ctx) error {
 		JSON(utils.DefaultSuccessResponse(fiber.StatusOK, "update sensor successfully"))
 }
 
+// DeleteSensor godoc
+// @Summary Delete Sensor
+// @Description Delete sensor by ID
+// @Tags Sensors
+// @Accept json
+// @Produce json
+// @Param id path string true "Sensor ID"
+// @Success 200 {object} map[string]interface{}
+// @Failure 404 {object} map[string]interface{}
+// @Router /sensors/{id} [delete]
 func (c *SensorController) Delete(ctx *fiber.Ctx) error {
 	id := ctx.Params("id")
 

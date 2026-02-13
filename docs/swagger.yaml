@@ -1,0 +1,415 @@
+basePath: /api/v1
+definitions:
+  model.CreateDeviceRequest:
+    properties:
+      location:
+        type: string
+      name:
+        maxLength: 100
+        type: string
+      status:
+        type: string
+    required:
+    - name
+    type: object
+  model.CreateSensorRequest:
+    properties:
+      device_id:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        maxLength: 100
+        type: string
+      type:
+        maxLength: 50
+        type: string
+      unit:
+        type: string
+    required:
+    - device_id
+    - name
+    - type
+    type: object
+  model.DeviceResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+      sensors:
+        items:
+          $ref: '#/definitions/model.SensorResponse'
+        type: array
+      status:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  model.SensorResponse:
+    properties:
+      created_at:
+        type: string
+      device_id:
+        type: string
+      device_name:
+        type: string
+      id:
+        type: string
+      is_active:
+        type: boolean
+      name:
+        type: string
+      type:
+        type: string
+      unit:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  model.UpdateDeviceRequest:
+    properties:
+      location:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+    type: object
+  model.UpdateSensorRequest:
+    properties:
+      is_active:
+        type: boolean
+      name:
+        maxLength: 100
+        type: string
+      type:
+        maxLength: 50
+        type: string
+      unit:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API for managing devices and sensors
+  title: Merapi IoT API
+  version: "1.0"
+paths:
+  /devices:
+    get:
+      consumes:
+      - application/json
+      description: Get all devices with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Field to order by
+        in: query
+        name: order_by
+        type: string
+      - description: Sort direction (asc or desc)
+        in: query
+        name: sort_by
+        type: string
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.DeviceResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get List of Devices
+      tags:
+      - Devices
+    post:
+      consumes:
+      - application/json
+      description: Create new device
+      parameters:
+      - description: Device Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateDeviceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.DeviceResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create Device
+      tags:
+      - Devices
+  /devices/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete device by ID
+      parameters:
+      - description: Device ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete Device
+      tags:
+      - Devices
+    get:
+      consumes:
+      - application/json
+      description: Get device details by ID
+      parameters:
+      - description: Device ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.DeviceResponse'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get Device by ID
+      tags:
+      - Devices
+    put:
+      consumes:
+      - application/json
+      description: Update device details by ID
+      parameters:
+      - description: Device ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Update Device Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateDeviceRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update Device
+      tags:
+      - Devices
+  /sensors:
+    get:
+      consumes:
+      - application/json
+      description: Get list of sensors with pagination
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Number of items per page
+        in: query
+        name: limit
+        type: integer
+      - description: Order by field
+        in: query
+        name: order_by
+        type: string
+      - description: Sort by direction (asc/desc)
+        in: query
+        name: sort_by
+        type: string
+      - description: Search term
+        in: query
+        name: search
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SensorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get Sensors List
+      tags:
+      - Sensors
+    post:
+      consumes:
+      - application/json
+      description: Create new sensor
+      parameters:
+      - description: Sensor Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.CreateSensorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SensorResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create Sensor
+      tags:
+      - Sensors
+  /sensors/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete sensor by ID
+      parameters:
+      - description: Sensor ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Delete Sensor
+      tags:
+      - Sensors
+    get:
+      consumes:
+      - application/json
+      description: Get sensor details by ID
+      parameters:
+      - description: Sensor ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.SensorResponse'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Get Sensor by ID
+      tags:
+      - Sensors
+    put:
+      consumes:
+      - application/json
+      description: Update sensor by ID
+      parameters:
+      - description: Sensor ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Sensor Request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/model.UpdateSensorRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Update Sensor
+      tags:
+      - Sensors
+swagger: "2.0"
